@@ -9,16 +9,23 @@ launchBtn.addEventListener("click", () => {
   const obVelocity = document.querySelector("#obVelocity").value;
   const movingObject = document.querySelector("#movingObject");
   const obPositions = [];
-  for (let i = 0; i <= 10; i += 0.1) {
-    const x = obVelocity * i * Math.cos(Math.PI * (obAngle / 180));
+  let t = 0;
+
+  while (true) {
+    const x = obVelocity * t * Math.cos(Math.PI * (obAngle / 180));
     const y =
-      obVelocity * i * Math.sin(Math.PI * (obAngle / 180)) -
-      0.5 * 9.8 * Math.pow(i, 2);
+      obVelocity * t * Math.sin(Math.PI * (obAngle / 180)) -
+      0.5 * 9.8 * Math.pow(t, 2);
     obPositions.push({ x, y });
+    console.log({ y, t });
+    if (y < 0) {
+      console.log("break");
+      break;
+    }
+    t += 0.1;
   }
-  console.log(obPositions);
   var i = 0;
-  const arrayLen = obPositions.length;
+  const arrayLen = obPositions.length - 1;
   movingObject.style.transform = `translate(${obPositions[i].x}px, ${obPositions[i].y}px)`;
   movingObject.addEventListener("transitionrun", () => {
     if (i < arrayLen) {
@@ -27,7 +34,9 @@ launchBtn.addEventListener("click", () => {
   });
 
   movingObject.addEventListener("transitionend", () => {
-    movingObject.style.transform = `translate(${obPositions[i].x}px, -${obPositions[i].y}px)`;
+    if (i < arrayLen) {
+      movingObject.style.transform = `translate(${obPositions[i].x}px, -${obPositions[i].y}px)`;
+    }
     console.log({ arrayLen, i });
   });
 });
