@@ -5,15 +5,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Projectile Motion</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="index.js"></script>
 </head>
 
 <body>
     <main>
-        <div class="moving-area">
+        <div class="moving-area" id="movingArea">
             <div class="moving-object" id="movingObject"></div>
+            <canvas class="line-canvas" id="lineCanvas"></canvas>
+            <canvas class="ball-canvas" id="ballCanvas"></canvas>
+
         </div>
         <div class="interaction-area">
             <label for="angle">Angle<input type="number" value="45" id="obAngle"></label>
