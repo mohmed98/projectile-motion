@@ -12,16 +12,35 @@
 
 <body>
     <main>
+        <header>
+            <h1 class="page-title">Projectile Motion</h1>
+        </header>
         <div class="moving-area" id="movingArea">
             <div class="moving-object" id="movingObject"></div>
             <canvas class="line-canvas" id="lineCanvas"></canvas>
 
         </div>
         <div class="interaction-area">
-            <label for="angle">Angle<input type="number" value="45" id="obAngle"></label>
-            <label for="velocity">velocity<input type="number" value="30" id="obVelocity"></label>
-            <button id="launchBtn">launch</button>
-            <button id="resetBtn">Reset</button>
+            <div class="interaction-input">
+                <!-- <label for="angle">Angle<input type="number" value="45" id="obAngle"></label> -->
+                <label for="angle">Angle: <input type="range" value="45" id="obAngle" min='1' max='90'></label>
+                <span id="angleValue" class="range-value">45</span><span> &deg;</span>
+
+                <!-- <label for="velocity">velocity<input type="number" value="30" id="obVelocity"></label> -->
+                <label for="velocity">velocity: <input type="range" value="60" id="obVelocity" min='1' max='60'></label>
+                <span id="velocityValue" class="range-value">60</span><span> m/s</span>
+            </div>
+
+            <div class="interaction-btns">
+                <button id="launchBtn" class="btn btn_launch">launch</button>
+                <button id="resetBtn" class="btn btn_reset">Reset</button>
+            </div>
+
+        </div>
+        <div class="result-area">
+            <span>Total flight time of the object: <span class="flightTime"></span></span>
+            <span>Horizontal range (maximum x above ground) of the object: <span class="xRange"></span></span>
+
         </div>
     </main>
 </body>
