@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Motion</title>
+    <style>
+        main {
+            width: 600px;
+            margin: auto;
+            font-family: sans-serif;
+        }
+
+        .moving-area {
+            height: 200px;
+            width: 400px;
+            display: flex;
+            align-items: flex-end;
+            border-bottom: 1px solid;
+            border-left: 1px solid;
+            margin: 1em;
+            padding: 0;
+        }
+
+        .moving-object {
+            width: 1rem;
+            height: 1rem;
+            background-color: #000;
+            border-radius: 50%;
+            transition: all 0.1s;
+        }
+
+        .line-canvas {
+            position: absolute;
+            /* height: 300px; */
+        }
+
+        .page-title {
+            text-align: center;
+        }
+
+        .interaction-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .interaction-btns {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            border: 2px solid #fff;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .btn_launch {
+            background-color: #0275d8;
+        }
+
+        .btn_launch:hover {
+            color: #0275d8;
+            background-color: #fff;
+            border: 2px solid #0275d8;
+        }
+
+        .btn_reset {
+            background-color: #5cb85c;
+        }
+
+        button:disabled,
+        button[disabled] {
+            opacity: 40%;
+        }
+
+        .btn_reset:hover {
+            color: #5cb85c;
+            background-color: #fff;
+            border: 2px solid #5cb85c;
+        }
+
+        .result-area {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1 class="page-title">Projectile Motion</h1>
+        </header>
+        <div class="moving-area" id="movingArea">
+            <div class="moving-object" id="movingObject"></div>
+            <canvas class="line-canvas" id="lineCanvas"></canvas>
+
+        </div>
+        <div class="interaction-area">
+            <div class="interaction-input">
+                <!-- <label for="angle">Angle<input type="number" value="45" id="obAngle"></label> -->
+                <label for="angle">Angle: <input type="range" value="45" id="obAngle" min='1' max='90'></label>
+                <span id="angleValue" class="range-value">45</span><span> &deg;</span>
+
+                <!-- <label for="velocity">velocity<input type="number" value="30" id="obVelocity"></label> -->
+                <label for="velocity">velocity: <input type="range" value="60" id="obVelocity" min='1' max='60'></label>
+                <span id="velocityValue" class="range-value">60</span><span> m/s</span>
+            </div>
+
+            <div class="interaction-btns">
+                <button id="launchBtn" class="btn btn_launch">launch</button>
+                <button id="resetBtn" class="btn btn_reset">Reset</button>
+            </div>
+
+        </div>
+        <div class="result-area">
+            <span>Total flight time of the object: <span class="flightTime"></span></span>
+            <span>Horizontal range (maximum x above ground) of the object: <span class="xRange"></span></span>
+
+        </div>
+    </main>
+    <script>
+        const launchBtn = document.querySelector("#launchBtn");
+        const resetBtn = document.querySelector("#resetBtn");
+        resetBtn.addEventListener("click", () => {
+            location.reload();
+        });
+        const obAngleElement = document.querySelector("#obAngle");
+        const obVelocityElement = document.querySelector("#obVelocity");
+
+        obAngleElement.addEventListener("change", () => {
+            launchBtn.disabled = false;
+            const angleValue = document.querySelector("#angleValue");
+            angleValue.innerHTML = obAngleElement.value;
+        });
+        obVelocityElement.addEventListener("change", () => {
+            launchBtn.disabled = false;
+            const velocityValue = document.querySelector("#velocityValue");
+            velocityValue.innerHTML = obVelocityElement.value;
+        });
+
+        launchBtn.addEventListener("click", () => {
+            launchBtn.disabled = true;
+            const obAngle = obAngleElement.value;
+            const obVelocity = obVelocityElement.value;
+            const movingObject = document.querySelector("#movingObject");
+            const lineCanvas = document.querySelector("#lineCanvas");
+            const flightTime = document.querySelector(".flightTime");
+            const xRange = document.querySelector(".xRange");
+            const obPositions = [];
+            let t = 0;
+
+            while (true) {
+                const x = obVelocity * t * Math.cos(Math.PI * (obAngle / 180));
+                const y =
+                    obVelocity * t * Math.sin(Math.PI * (obAngle / 180)) -
+                    0.5 * 9.8 * Math.pow(t, 2);
+                obPositions.push({ x, y });
+                if (y < 0) {
+                    break;
+                }
+                t += 0.1;
+            }
+            flightTime.innerHTML = t.toFixed(4) + " s";
+            xRange.innerHTML = obPositions[obPositions.length - 1].x.toFixed(4) + " m";
+
+            console.log(t);
+            var i = 0;
+
+            const arrayLen = obPositions.length - 1;
+            movingObject.style.transform = `translate(${obPositions[i].x}px, ${obPositions[i].y}px)`;
+            lineCanvas.height = 250;
+            lineCanvas.width = 600;
+
+            const linePath = lineCanvas.getContext("2d");
+
+            linePath.moveTo(8, 250);
+            linePath.lineWidth = 1;
+
+            movingObject.addEventListener("transitionrun", () => {
+                if (i < arrayLen) {
+                    i++;
+                }
+            });
+
+            movingObject.addEventListener("transitionend", () => {
+                if (i < arrayLen) {
+                    movingObject.style.transform = `translate(${obPositions[i].x}px, -${obPositions[i].y}px)`;
+                    linePath.lineTo(obPositions[i].x + 8, 245 - obPositions[i].y);
+                    console.log(`translate(${obPositions[i].x}px, -${obPositions[i].y}px)`);
+                    linePath.stroke();
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

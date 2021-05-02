@@ -45,6 +45,10 @@ main {
   color: #fff;
   border-radius: 5px;
 }
+button:disabled,
+button[disabled] {
+  opacity: 40%;
+}
 .btn_launch {
   background-color: #0275d8;
 }
