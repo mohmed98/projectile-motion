@@ -9,9 +9,7 @@ launchBtn.addEventListener("click", () => {
   const obVelocity = document.querySelector("#obVelocity").value;
   const movingObject = document.querySelector("#movingObject");
   const lineCanvas = document.querySelector("#lineCanvas");
-  const ballCanvas = document.querySelector("#ballCanvas");
 
-  ballCanvas;
   const obPositions = [];
   let t = 0;
 
@@ -30,13 +28,13 @@ launchBtn.addEventListener("click", () => {
   var i = 0;
   const arrayLen = obPositions.length - 1;
   movingObject.style.transform = `translate(${obPositions[i].x}px, ${obPositions[i].y}px)`;
+  lineCanvas.height = 300;
+  lineCanvas.width = 600;
 
   const linePath = lineCanvas.getContext("2d");
-  const movingBall = ballCanvas.getContext("2d");
-  movingBall.beginPath();
-  movingBall.arc(50, 150, 10, 0, 2 * Math.PI);
-  movingBall.stroke();
-  linePath.moveTo(0, 150);
+
+  linePath.moveTo(8, 300);
+  linePath.lineWidth = 2;
 
   movingObject.addEventListener("transitionrun", () => {
     if (i < arrayLen) {
@@ -47,20 +45,9 @@ launchBtn.addEventListener("click", () => {
   movingObject.addEventListener("transitionend", () => {
     if (i < arrayLen) {
       movingObject.style.transform = `translate(${obPositions[i].x}px, -${obPositions[i].y}px)`;
-      linePath.lineTo(obPositions[i].x, 150 - obPositions[i].y);
-      console.log(obPositions[i].x, obPositions[i].y) + 100;
+      linePath.lineTo(obPositions[i].x + 8, 300 - obPositions[i].y);
+      console.log(`translate(${obPositions[i].x}px, -${obPositions[i].y}px)`);
       linePath.stroke();
-      movingBall.clearRect(0, 0, 150, 150);
-      movingBall.beginPath();
-      movingBall.arc(
-        obPositions[i].x,
-        150 - obPositions[i].y,
-        10,
-        0,
-        2 * Math.PI
-      );
-      movingBall.fillStyle = "#000";
-      movingBall.fill();
     }
   });
 });
